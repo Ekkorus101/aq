@@ -11,7 +11,7 @@ class gameUI():
     def __init__(self) -> None:
         self.root = tk.Tk()
         self.root.title("roulette")
-        self.root.geometry('500x500')
+        self.root.geometry('800x500')
         
         self.gameType=0
         self.game=FairRoulette()
@@ -37,6 +37,7 @@ class gameUI():
         self.labelAssets=tk.Label(self.frame4)
         self.labelBetInfo=tk.Label(self.frame5)
         self.labelGameType=tk.Label(self.frame6)
+        self.logTextBox=tk.Text(self.frame1,width=800)
 
         button1 = tk.Button(self.frame2, text="bet one",command=self.betOne)
         button3 = tk.Button(self.frame2, text="bet multi",command=self.betMulti)
@@ -47,6 +48,7 @@ class gameUI():
         button3.pack(side=tk.LEFT,padx=20)
         button2.pack(side=tk.RIGHT,padx=20)
         button4.pack(side=tk.RIGHT,padx=20)
+        self.logTextBox.pack(anchor=tk.W)
         self.labelAssets.pack(anchor=tk.CENTER)
         self.labelBetInfo.pack(anchor=tk.CENTER)
         self.labelGameType.pack(anchor=tk.CENTER)
@@ -63,6 +65,7 @@ class gameUI():
         self.resetBetInfo()
         self.resetAssets()
         self.resetGameType()
+        self.logTextBox.see('end')
 
     def mainLoop(self):
         self.root.mainloop()
@@ -197,9 +200,9 @@ class gameUI():
         else:
             betSet=genBetSet(1,set(),self.varOddEven.get(),self.varColor.get(),self.varArea.get())
         self.game.spin()
-        print(betSet)
-        print(self.game.ball)
-        self.assets+=self.game.betPocket(betSet,1)
+        delta=self.game.betPocket(betSet,1)
+        self.assets+=delta
+        self.logTextBox.insert(tk.INSERT,'you bet:'+str(betSet)+' ; ball stop at:'+str(self.game.ball)+' ; assets changes:'+str(delta)+'\n')
         self.reFresh()
 
 gameui=gameUI()
